@@ -20,8 +20,9 @@ dist/
 *.tmp
 *.bak
 
-# Output images
+# images
 output_images/
+input_images/
 
 # Model weights
 *.h5
