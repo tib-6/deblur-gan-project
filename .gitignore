@@ -33,3 +33,15 @@ input_images/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Ignore output images and model weights
+output_images/
+*.h5
+venv/
+
+# Ignore cache, logs, temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.tmp
