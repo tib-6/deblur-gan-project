@@ -1,10 +1,9 @@
 # What is this repo ?
 
 This repository is a Keras implementation of [Deblur GAN](https://arxiv.org/pdf/1711.07064.pdf). You can find a tutorial on how it works on [Medium](https://blog.sicara.com/keras-generative-adversarial-networks-image-deblurring-45e3ab6977b5). Below is a sample result (from left to right: sharp image, blurred image, deblurred image)
+Please note that the requirements.txt is compatible with Python 3.7.9
 
 ![Sample results](./sample/results0.png)
-
-Les exigences(requirements.txt) compatibles avec Python 3.7.9
 
 # Installation
 
