@@ -4,6 +4,8 @@ This repository is a Keras implementation of [Deblur GAN](https://arxiv.org/pdf/
 
 ![Sample results](./sample/results0.png)
 
+Les exigences(requirements.txt) compatibles avec Python 3.7.9
+
 # Installation
 
 ```
