@@ -11,6 +11,9 @@ from deblurgan.model import generator_model, discriminator_model, generator_cont
 from keras.callbacks import TensorBoard
 from keras.optimizers import Adam
 
+# Ajout MLOps tracker
+from mlops.mlflow_tracking import DeblurGANTracker
+
 BASE_DIR = 'weights/'
 
 
@@ -47,6 +50,11 @@ def train_multiple_outputs(n_images, batch_size, log_dir, epoch_num, critic_upda
     log_path = './logs'
     tensorboard_callback = TensorBoard(log_path)
 
+    # --- MLOps Tracker ---
+    tracker = DeblurGANTracker()
+    tracker.start_run("my_training_run")
+    tracker.log_params({'lr': 1E-4, 'batch_size': batch_size})
+
     for epoch in tqdm.tqdm(range(epoch_num)):
         permutated_indexes = np.random.permutation(x_train.shape[0])
 
@@ -66,18 +74,33 @@ def train_multiple_outputs(n_images, batch_size, log_dir, epoch_num, critic_upda
                 d_losses.append(d_loss)
 
             d.trainable = False
-
             d_on_g_loss = d_on_g.train_on_batch(image_blur_batch, [image_full_batch, output_true_batch])
             d_on_g_losses.append(d_on_g_loss)
-
             d.trainable = True
 
-        # write_log(tensorboard_callback, ['g_loss', 'd_on_g_loss'], [np.mean(d_losses), np.mean(d_on_g_losses)], epoch_num)
-        print(np.mean(d_losses), np.mean(d_on_g_losses))
-        with open('log.txt', 'a+') as f:
-            f.write('{} - {} - {}\n'.format(epoch, np.mean(d_losses), np.mean(d_on_g_losses)))
+        # Moyenne des pertes pour l'epoch
+        mean_d_loss = np.mean(d_losses)
+        mean_d_on_g_loss = np.mean(d_on_g_losses)
 
-        save_all_weights(d, g, epoch, int(np.mean(d_on_g_losses)))
+        print(mean_d_loss, mean_d_on_g_loss)
+        with open('log.txt', 'a+') as f:
+            f.write('{} - {} - {}\n'.format(epoch, mean_d_loss, mean_d_on_g_loss))
+
+        save_all_weights(d, g, epoch, int(mean_d_on_g_loss))
+
+        # --- Log metrics MLOps ---
+        tracker.log_training_metrics(
+            epoch=epoch,
+            generator_loss=mean_d_on_g_loss,
+            discriminator_loss=mean_d_loss,
+            perceptual_loss=mean_d_on_g_loss,  # approximatif ici
+            psnr=None,
+            ssim=None
+        )
+
+    # --- Fin du run MLOps ---
+    tracker.log_model(g)
+    tracker.end_run()
 
 
 @click.command()

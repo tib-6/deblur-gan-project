@@ -1,0 +1,15 @@
+artifact_uri: ./mlruns/2/fa1ae03b36174ca7ad0df213250d6d75/artifacts
+end_time: 1768653277851
+entry_point_name: ''
+experiment_id: '2'
+lifecycle_stage: active
+run_id: fa1ae03b36174ca7ad0df213250d6d75
+run_name: quick_test
+run_uuid: fa1ae03b36174ca7ad0df213250d6d75
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1768653277797
+status: 3
+tags: []
+user_id: hicha
